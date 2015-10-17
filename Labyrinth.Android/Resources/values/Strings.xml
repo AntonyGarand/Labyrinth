@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="hello">Appuyez sur lecan pour commencer!</string>
+	<string name="app_name">Labyrinth.Android</string>
+</resources>
