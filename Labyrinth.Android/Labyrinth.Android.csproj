@@ -47,8 +47,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Animation.cs" />
-    <Compile Include="AnimationFrame.cs" />
     <Compile Include="Ball.cs" />
     <Compile Include="Collision.cs" />
     <Compile Include="MainActivity.cs" />
