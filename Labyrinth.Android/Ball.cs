@@ -31,7 +31,10 @@ namespace Labyrinth
 
         private Texture2D sprite;
 
-
+        /// <summary>
+        /// Creates a new ball at position 0,0
+        /// </summary>
+        /// <param name="graphicsDevice">Graphics device to load the </param>
         public Ball(GraphicsDevice graphicsDevice)
         {
             X = 0;
@@ -40,9 +43,9 @@ namespace Labyrinth
             speedX = 0.5f;
             speedY = 0.5f;
 
-            accelerationSpeed = 2.0f;
+            accelerationSpeed = 1.0f;
 
-            speedCap = 10f;
+            speedCap = 5f;
             resistance = 0.3f;
 
 

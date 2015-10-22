@@ -24,7 +24,9 @@ namespace Labyrinth
         private Vector2 originalPosition;
 
         int status;  /* From 0 to 10, according to the level. 0 = menu. */
-
+        /// <summary>
+        /// Constructor of the game activity
+        /// </summary>
         public MainGame()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -37,7 +39,9 @@ namespace Labyrinth
         {
             base.Initialize();
         }
-
+        /// <summary>
+        /// Load the game content
+        /// </summary>
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
@@ -53,7 +57,10 @@ namespace Labyrinth
             status = 0;
             createLevel();
         }
-
+        /// <summary>
+        /// Update the game to its next state. 
+        /// </summary>
+        /// <param name="gameTime">current GameTime</param>
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -72,7 +79,10 @@ namespace Labyrinth
             checkPlayerCollision();
             player.Move();
         }
-
+        /// <summary>
+        /// Draw the current game status
+        /// </summary>
+        /// <param name="gameTime">current GameTime</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -90,7 +100,10 @@ namespace Labyrinth
 
             base.Draw(gameTime);
         }
-
+        /// <summary>
+        /// Checks the collision of the player with holes and walls.
+        /// Updates the player speed accordingly
+        /// </summary>
         private void checkPlayerCollision()
         {
             Vector2 playerPos = player.Coords();
@@ -147,18 +160,9 @@ namespace Labyrinth
                     }/* End of range check */
                 } /* end of for y */
             }/* end of for x */
-
-            /* Checking for a hole */
-            if (map.findTile(playerCoordX, playerCoordY).Name == "trou") {
-                if (Collision.checkCircularCollision(new Vector2(playerCoordX + map.TileWidth / 2, playerCoordY + map.TileHeight / 2), 20, new Vector2(playerCoordX, playerCoordY), new Vector2(playerPosX, playerPosY))){
-                    fall.Play();
-                    player.setPosition(originalPosition);
-                    Log.Debug("Main", "Trou!");
-                }
-            }
-
+            
             /* Checking for the exit */
-            else if (map.findTile(playerCoordX, playerCoordY).Name == "sortie")
+            if (map.findTile(playerCoordX, playerCoordY).Name == "sortie")
             {
                 win.Play();
                 status++;
@@ -167,8 +171,22 @@ namespace Labyrinth
             }
             player.setSpeed(newSpeed);
 
+            /* Checking for a hole */
+            if (map.findTile(playerCoordX, playerCoordY).Name == "trou") {
+                if (Collision.checkCircularCollision(new Vector2(playerCoordX + map.TileWidth / 2, playerCoordY + map.TileHeight / 2), 20, new Vector2(playerCoordX, playerCoordY), new Vector2(playerPosX, playerPosY))){
+                    fall.Play();
+                    resetPlayerPosition();
+                    Log.Debug("Main", "Trou!");
+                }
+            }
+
+
         } /* End of checkPlayerCollision */
 
+        /// <summary>
+        /// Replace the current map with the next level.
+        /// Level is found using the "status" variable.
+        /// </summary>
         private void createLevel()
         {
             switch (status)
@@ -195,20 +213,6 @@ namespace Labyrinth
                 case 2:
                     {
                         map = new TiledMap(this.GraphicsDevice);
-                        int[,] walls = { { 1, 0 }, { 2, 0 }, { 3, 0 }, { 4, 0 }, { 5, 0 }, { 6, 0 }, { 7, 0 }, { 8, 0 }, { 9, 0 }, { 1, 1 }, { 9, 1 }, { 1, 2 }, { 5, 2 }, { 6, 2 }, { 7, 2 }, { 9, 2 }, { 1, 3 }, { 5, 3 }, { 7, 3 }, { 9, 3 }, { 1, 4 }, { 2, 4 }, { 3, 4 }, { 4, 4 }, { 5, 4 }, { 7, 4 }, { 9, 4 }, { 7, 5 }, { 9, 5 }, { 6, 6 }, { 7, 6 }, { 9, 6 }, { 10, 6 }, { 5, 7 }, { 6, 7 }, { 10, 7 }, { 5, 8 }, { 10, 8 }, { 4, 9 }, { 5, 9 }, { 10, 9 }, { 4, 10 }, { 10, 10 }, { 4, 11 }, { 9, 11 }, { 10, 11 }, { 4, 12 }, { 8, 12 }, { 9, 12 }, { 4, 13 }, { 5, 13 }, { 6, 13 }, { 7, 13 }, { 8, 13 } };
-                        int[,] holes = { { 3, 1 }, { 3, 2 }, { 7, 7 }, { 9, 7 }, { 6, 8 }, { 7, 8 }, { 6, 9 }, { 7, 9 }, { 8, 9 }, { 5, 10 }, { 6, 10 }, { 5, 11 }, { 8, 11 }, { 5, 12 }, { 6, 12 }, { 7, 12 } };
-                        int[] end = { 6, 11 };
-                        int[] spawn = { 2, 1 };
-                        map.CreateWalls(walls);
-                        map.CreateHoles(holes);
-                        map.setEnd(end);
-                        originalPosition = new Vector2(spawn[0] * map.TileWidth, spawn[1] * map.TileHeight);
-                        player.setPosition(originalPosition);
-                        break;
-                    }
-                case 3:
-                    {
-                        map = new TiledMap(this.GraphicsDevice);
                         int[,] walls = { { 6, 1 }, { 14, 1 }, { 15, 1 }, { 16, 1 }, { 17, 1 }, { 18, 1 }, { 19, 1 }, { 20, 1 }, { 1, 2 }, { 6, 2 }, { 14, 2 }, { 15, 2 }, { 16, 2 }, { 1, 3 }, { 2, 3 }, { 3, 3 }, { 6, 3 }, { 9, 3 }, { 10, 3 }, { 11, 3 }, { 14, 3 }, { 15, 3 }, { 16, 3 }, { 22, 3 }, { 1, 4 }, { 2, 4 }, { 3, 4 }, { 6, 4 }, { 9, 4 }, { 14, 4 }, { 15, 4 }, { 16, 4 }, { 19, 4 }, { 20, 4 }, { 21, 4 }, { 22, 4 }, { 1, 5 }, { 2, 5 }, { 3, 5 }, { 6, 5 }, { 9, 5 }, { 14, 5 }, { 15, 5 }, { 16, 5 }, { 19, 5 }, { 1, 6 }, { 2, 6 }, { 3, 6 }, { 6, 6 }, { 9, 6 }, { 12, 6 }, { 13, 6 }, { 14, 6 }, { 15, 6 }, { 16, 6 }, { 19, 6 }, { 1, 7 }, { 2, 7 }, { 6, 7 }, { 9, 7 }, { 12, 7 }, { 19, 7 }, { 22, 7 }, { 23, 7 }, { 6, 8 }, { 9, 8 }, { 12, 8 }, { 19, 8 }, { 22, 8 }, { 23, 8 }, { 4, 9 }, { 5, 9 }, { 6, 9 }, { 9, 9 }, { 12, 9 }, { 15, 9 }, { 16, 9 }, { 17, 9 }, { 18, 9 }, { 19, 9 }, { 3, 10 }, { 4, 10 }, { 5, 10 }, { 6, 10 }, { 9, 10 }, { 12, 10 }, { 15, 10 }, { 16, 10 }, { 17, 10 }, { 18, 10 }, { 19, 10 }, { 9, 11 }, { 15, 11 }, { 16, 11 }, { 17, 11 }, { 18, 11 }, { 19, 11 }, { 20, 11 }, { 21, 11 }, { 9, 12 }, { 15, 12 }, { 16, 12 }, { 17, 12 }, { 18, 12 }, { 19, 12 }, { 20, 12 }, { 21, 12 }, { 22, 12 } };
                         int[,] holes = { { 5, 1 }, { 11, 1 }, { 23, 1 }, { 3, 2 }, { 9, 2 }, { 20, 2 }, { 7, 3 }, { 17, 3 }, { 4, 4 }, { 8, 5 }, { 10, 5 }, { 20, 5 }, { 22, 5 }, { 5, 6 }, { 18, 6 }, { 7, 7 }, { 10, 7 }, { 13, 7 }, { 1, 8 }, { 4, 8 }, { 17, 8 }, { 21, 8 }, { 8, 9 }, { 11, 9 }, { 22, 9 }, { 2, 10 }, { 14, 10 }, { 20, 10 }, { 3, 11 }, { 12, 11 }, { 1, 12 }, { 6, 12 } };
                         int[] spawn = { 1, 1 };
@@ -220,7 +224,7 @@ namespace Labyrinth
                         player.setPosition(originalPosition);
                         break;
                     }
-                case 4:
+                case 3:
                     {
                         map = new TiledMap(this.GraphicsDevice);
                         int[,] walls = { };
@@ -241,9 +245,13 @@ namespace Labyrinth
             
         }
 
+        /// <summary>
+        /// Resets the player position and speed to the original one.
+        /// </summary>
         private void resetPlayerPosition()
         {
             player.setPosition(originalPosition);
+            player.setSpeed(new Vector2(0, 0));
         }
 	}
 }
